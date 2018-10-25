@@ -20,7 +20,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 2*60*60*1000, //设置session一小时后过期
+        maxAge: 60*60*1000, //设置session一小时后过期
         secure: false
     },
     store: new MongoStore({ mongooseConnection: mongooseConnect })

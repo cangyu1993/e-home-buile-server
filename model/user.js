@@ -2,13 +2,24 @@ const mongoose = require('mongoose')
 
 const user = new mongoose.Schema({
     avatar: String,
+    username:String,
     idCard:{
         type:String,
         required:true,
         unique:true
     },
-    username: String,
-    email: String,
+    home:String,
+    job:String,
+    nation:String,
+    wxNum:String,
+    qqNum:String,
+    sex:Number,
+    study: String,
+    jobTitle:String,
+    money:Number,
+    inTime:Number,
+    payForTime:Number,
+    identity:String,
     password:{
         type:String,
         required:true,
