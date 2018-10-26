@@ -90,6 +90,10 @@ router.post('/login', async (req, res, next) => {
 router.get('/getuser', auth, async (req, res, next) => {
     try {
         let {page = 1, size = 10} = req.query
+        page = parseInt(page)
+        size = parseInt(size)
+        let userlength = await userModel.find({},{password: 0})
+        console.log(page,size)
         let user = await userModel.find({},{password: 0})
             .skip((page-1)*size)
             .limit(size)
@@ -97,7 +101,7 @@ router.get('/getuser', auth, async (req, res, next) => {
         res.json({
             code: 200,
             data: user,
-            count:user.length,
+            count:userlength.length,
             msg: "success"
         })
     } catch (err) {
