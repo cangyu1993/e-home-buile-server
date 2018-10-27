@@ -5,7 +5,10 @@ const news = new mongoose.Schema({
     content:String,
     contentText:String,
     img:String,
-    author:String,
+    author:{
+        type: mongoose.SchemaTypes.ObjectId,
+        ref:'user'
+    },
     type:{
         type: mongoose.SchemaTypes.ObjectId,
         ref:'category'
