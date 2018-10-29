@@ -36,7 +36,10 @@ router.get('/swiper',async (req,res,next)=>{
         let data = await SwiperModel.find()
             .skip((page-1)*size)
             .limit(size)
-            .sort({_id:-1})
+            .sort({sort:-1})
+            // .populate({
+            //     path:'type',
+            // })
         res.json({
             code:200,
             data:data,
@@ -67,18 +70,27 @@ router.post('/changeSwripe/:id',auth,async (req,res,next)=>{
     try {
         let {id} = req.params
         let {title,img,type,sort} = req.body
-        let data =await SwiperModel.findById(id)
-        let updata = await data.update({$set:{
-                title,
-                img,
-                type,
-                sort
-            }})
-        res.json({
-            code:200,
-            data:updata,
-            msg:"success"
-        })
+
+        if(title&&img&&type&&sort){
+            let data =await SwiperModel.findById(id)
+            let updata = await data.update({$set:{
+                    title,
+                    img,
+                    type,
+                    sort
+                }})
+            res.json({
+                code:200,
+                data:updata,
+                msg:"success"
+            })
+        }else {
+            res.json({
+                code:401,
+                msg:"缺少必要字段，内容存在空字段！"
+            })
+        }
+
     }catch (err) {
         next(err)
     }
