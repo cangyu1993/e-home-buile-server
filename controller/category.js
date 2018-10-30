@@ -49,5 +49,23 @@ router.get('/category',async (req,res,next)=>{
     }
 })
 
+router.get('/allcategory',async (req,res,next)=>{
+    try {
+        let data = await categoryModel.find()
+        res.json({
+            code:200,
+            data:data,
+            count:data.length,
+            msg:"success"
+        })
+    }catch (err) {
+        next(err)
+    }
+})
+
+
+
+
+
 
 module.exports = router;

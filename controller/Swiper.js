@@ -8,13 +8,14 @@ const userModel = require('../model/user');
 const jwt = require('jsonwebtoken')
 router.post('/addswiper', auth, async (req, res, next) => {
     try {
-        let {title, img, type, sort} = req.body
+        let {title, img, type, sort, status} = req.body
         sort = parseInt(sort)
         let data = await SwiperModel.create({
             title,
             img,
             type,
-            sort
+            sort,
+            status
         })
         res.json({
             code: 200,
@@ -28,24 +29,28 @@ router.post('/addswiper', auth, async (req, res, next) => {
 
 router.get('/swiper', async (req, res, next) => {
     try {
-        let {page = 1, size = 10} = req.query
+        let {page = 1, size = 10 , status} = req.query
         page = parseInt(page)
         size = parseInt(size)
+        status = parseInt(status)
         let datalength = await SwiperModel.find()
-
-        let data = await SwiperModel.find()
-            .skip((page - 1) * size)
-            .limit(size)
-            .sort({sort: -1})
-        // .populate({
-        //     path:'type',
-        // })
-        res.json({
-            code: 200,
-            data: data,
-            msg: "success",
-            count: datalength.length
-        })
+        if (datalength.length) {
+            let data = await SwiperModel.find({status:status})
+                .skip((page - 1) * size)
+                .limit(size)
+                .sort({sort: -1})
+            res.json({
+                code: 200,
+                data: data,
+                msg: "success",
+                count: datalength.length
+            })
+        } else {
+            res.json({
+                code: 200,
+                msg: "暂无更对数据！"
+            })
+        }
     } catch (err) {
         next(err)
     }
@@ -71,7 +76,7 @@ router.post('/changeSwripe/:id', (req, res, next) => {
     let token = req.headers.token || req.body.token || req.query.token
 
     let {id} = req.params
-    let {title, img, type, sort} = req.body
+    let {title, img, type, sort, status} = req.body
 
     if (token) {
         const cert = '1024'
@@ -83,19 +88,20 @@ router.post('/changeSwripe/:id', (req, res, next) => {
                 })
                 return
             }
-            console.log(decode)
+            // console.log(decode)
 
             userModel.findOne({_id: decode.userId}).then(user => {
                 SwiperModel.findById(id).then(data => {
-                    if (title && img && type && sort) {
+                    if (title && img && type && sort && status) {
                         data.update({
                             $set: {
                                 title,
                                 img,
                                 type,
-                                sort
+                                sort,
+                                status
                             }
-                        }).then(updata=>{
+                        }).then(updata => {
                             res.json({
                                 code: 200,
                                 data: updata,

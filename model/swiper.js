@@ -7,7 +7,8 @@ const Swiper = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref:"news"
     },
-    sort:Number
+    sort:Number,
+    status:Number
 }, {
     versionKey: false,
     timestamps: {createdAt: 'createdTime', updatedAt: 'updateTime'}

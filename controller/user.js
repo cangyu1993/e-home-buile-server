@@ -58,7 +58,7 @@ router.post('/login', async (req, res, next) => {
 
 
                     const cert = '1024'
-                    const token = jwt.sign({userId:user._id},cert,{expiresIn: 60*60*12})
+                    const token = jwt.sign({userId: user._id}, cert, {expiresIn: 60 * 60 * 12})
 
 
                     req.session.user = user
@@ -68,8 +68,9 @@ router.post('/login', async (req, res, next) => {
                             idCard: user.idCard,
                             avatar: user.avatar,
                             username: user.username,
+                            id: user._id
                         },
-                        token:token,
+                        token: token,
                         msg: "登陆成功"
                     })
                 } else {
@@ -100,17 +101,41 @@ router.get('/getuser', auth, async (req, res, next) => {
         let {page = 1, size = 10} = req.query
         page = parseInt(page)
         size = parseInt(size)
-        let userlength = await userModel.find({},{password: 0})
-        console.log(page,size)
-        let user = await userModel.find({},{password: 0})
-            .skip((page-1)*size)
+        let userlength = await userModel.find({}, {password: 0})
+        console.log(page, size)
+        let user = await userModel.find({}, {password: 0})
+            .skip((page - 1) * size)
             .limit(size)
-            .sort({_id:-1})
+            .sort({_id: -1})
         res.json({
             code: 200,
             data: user,
-            count:userlength.length,
+            count: userlength.length,
             msg: "success"
+        })
+    } catch (err) {
+        next(err)
+    }
+})
+
+router.get('/getuser/:id', async (req, res, next) => {
+    let {id} = req.params
+    let data = await userModel.find({_id: id}, {password: 0})
+    res.json({
+        code: 200,
+        data: data,
+        msg: 'success'
+    })
+})
+
+router.get('/getAllUser', async (req, res, next) => {
+    try {
+        let data = await userModel.find({},{password: 0})
+        res.json({
+            code: 200,
+            data: data,
+            msg: "success",
+            count:data.length
         })
     } catch (err) {
         next(err)
