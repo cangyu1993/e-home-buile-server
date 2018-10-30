@@ -4,6 +4,7 @@ const router = Router();
 const auth = require('./auth')
 const userModel = require('../model/user');
 
+const jwt = require('jsonwebtoken')
 
 router.post('/adduser', async (req, res, next) => {
     const {
@@ -54,6 +55,12 @@ router.post('/login', async (req, res, next) => {
             let user = await userModel.findOne({idCard})
             if (user) {
                 if (password === user.password) {
+
+
+                    const cert = '1024'
+                    const token = jwt.sign({userId:user._id},cert,{expiresIn: 60*60*12})
+
+
                     req.session.user = user
                     res.json({
                         code: 200,
@@ -62,6 +69,7 @@ router.post('/login', async (req, res, next) => {
                             avatar: user.avatar,
                             username: user.username,
                         },
+                        token:token,
                         msg: "登陆成功"
                     })
                 } else {
