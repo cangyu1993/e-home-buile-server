@@ -63,6 +63,19 @@ router.get('/allcategory',async (req,res,next)=>{
     }
 })
 
+router.delete('/category/:id',auth,async (req,res,next)=>{
+    try {
+        let {id} = req.params
+        let data = await categoryModel.remove({_id:id})
+        res.json({
+            code:200,
+            msg:'success'
+        })
+    }catch (err) {
+        next(err)
+    }
+})
+
 
 
 
