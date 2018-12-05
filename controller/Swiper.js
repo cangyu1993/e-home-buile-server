@@ -6,7 +6,7 @@ const auth = require('./auth')
 const SwiperModel = require('../model/Swiper');
 const userModel = require('../model/user');
 const jwt = require('jsonwebtoken')
-router.post('/addswiper', auth, async (req, res, next) => {
+router.post('/addswiper', async (req, res, next) => {
     try {
         let {title, img, type, sort, status} = req.body
         sort = parseInt(sort)
@@ -59,6 +59,7 @@ router.get('/swiper', async (req, res, next) => {
 router.delete('/swiper/:id', auth, async (req, res, next) => {
     try {
         let {id} = req.params
+        console.log(id)
         let data = await SwiperModel.remove({_id: id})
         res.json({
             code: 200,

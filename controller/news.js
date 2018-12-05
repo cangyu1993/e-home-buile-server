@@ -55,6 +55,31 @@ router.get('/news/:id', async (req, res, next) => {
     }
 })
 
+router.get('/allnews', async (req, res, next) => {
+    try {
+        let {page = 1, size = 10} = req.query
+        page = parseInt(page)
+        size = parseInt(size)
+
+        let data = await newsModel.find()
+            .skip((page - 1) * size)
+            .limit(size)
+            .sort({_id: -1})
+            .populate({
+                path: 'type',
+                select: 'title'
+            })
+        res.json({
+            code: 200,
+            msg: "获取全部新闻成功",
+            data: data,
+            count: data.length
+        })
+    } catch (err) {
+        next(err)
+    }
+})
+
 router.post('/changeNews/:id',auth,async (req, res, next) => {
     try {
         let {id} = req.params
